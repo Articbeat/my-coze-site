@@ -1,57 +1,68 @@
-// 🎧 Ambient sound toggle
+// 🎧 Ambient Sound Toggle
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
-let soundPlaying = false;
+let isPlaying = false;
 
 soundToggle.addEventListener("click", () => {
-  soundPlaying = !soundPlaying;
-  if (soundPlaying) {
-    ambient.play();
+  if (!isPlaying) {
+    ambient.play().catch(err => console.log("Audio playback blocked:", err));
     soundToggle.textContent = "🔇 Stop Ambience";
   } else {
     ambient.pause();
     soundToggle.textContent = "🔈 Play Ambience";
   }
+  isPlaying = !isPlaying;
 });
 
-// 🕒 Pomodoro-style timer
-let time = 25 * 60;
-let timerInterval;
-const display = document.getElementById("time");
+// ⏳ Pomodoro Timer
+let totalTime = 25 * 60;
+let remaining = totalTime;
+let timer = null;
+const timeDisplay = document.getElementById("time");
+const startBtn = document.getElementById("start");
+const resetBtn = document.getElementById("reset");
 
-document.getElementById("start").addEventListener("click", () => {
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    let minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-    display.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    time--;
-    if (time < 0) {
-      clearInterval(timerInterval);
+function updateTime() {
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  timeDisplay.textContent = `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+}
+
+startBtn.addEventListener("click", () => {
+  clearInterval(timer);
+  timer = setInterval(() => {
+    if (remaining <= 0) {
+      clearInterval(timer);
       alert("Time’s up! Take a break ☕");
-      time = 25 * 60;
+      remaining = totalTime;
+      updateTime();
+      return;
     }
+    remaining--;
+    updateTime();
   }, 1000);
 });
 
-document.getElementById("reset").addEventListener("click", () => {
-  clearInterval(timerInterval);
-  time = 25 * 60;
-  display.textContent = "25:00";
+resetBtn.addEventListener("click", () => {
+  clearInterval(timer);
+  remaining = totalTime;
+  updateTime();
 });
 
-// 📝 Notes (saved to browser)
+updateTime();
+
+// 📝 Notes Auto-Save
 const noteArea = document.getElementById("noteArea");
 noteArea.value = localStorage.getItem("cozyNotes") || "";
+
 noteArea.addEventListener("input", () => {
   localStorage.setItem("cozyNotes", noteArea.value);
 });
 
-// 🌓 Theme Toggle
+// 🌙 Theme Toggle
 const themeToggle = document.getElementById("themeToggle");
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  themeToggle.textContent = document.body.classList.contains("dark")
-    ? "☀️ Switch Theme"
-    : "🌙 Switch Theme";
+  const darkMode = document.body.classList.contains("dark");
+  themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
