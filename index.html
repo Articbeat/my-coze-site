@@ -32,13 +32,18 @@
 
   <footer>
     <p>Made with 🩵 for calm minds.</p>
-<audio id="bg-music" src="lofi.mp3" loop></audio>
+
+    <!-- 🎵 Background Music -->
+    <audio id="ambient" loop>
+      <source src="lofi.mp3" type="audio/mpeg">
       <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2d74e6d541.mp3?filename=soft-rain-ambient-110449.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- 🎧 Toggle Button -->
     <button id="soundToggle">🔈 Play Ambience</button>
   </footer>
 
   <script src="script.js"></script>
 </body>
 </html>
-
-
