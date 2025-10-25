@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cozy Minimal — Your Name / Cafe / Project</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <meta name="description" content="Cozy minimal landing page. Soft tones, large type, relaxed spacing.">
+
+  <style>
+    :root{
+      --bg: #f7f5f3;           /* very light warm */
+      --card: #ffffff;         /* content card */
+      --muted: #7b6f66;        /* muted text */
+      --accent: #9aa6a3;       /* soft accent */
+      --accent-2: #cdb9a6;     /* warm secondary */
+      --radius: 14px;
+      --max: 980px;
+      --gap: 22px;
+      --shadow: 0 6px 24px rgba(17,17,17,0.06);
+      color-scheme: light;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,var(--bg),#fbfaf9 60%);
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#2b2a29;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:36px;
+    }
+
+    .wrap{
+      width:calc(100% - 48px);
+      max-width:var(--max);
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:42px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:var(--gap);
+      align-items:center;
+    }
+
+    /* responsive */
+    @media (max-width:900px){
+      .wrap{grid-template-columns:1fr; padding:28px}
+      .aside{order:2}
+    }
+
+    .brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:18px;
+    }
+    .logo{
+      height:56px;
+      width:56px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:grid;
+      place-items:center;
+      color:white;
+      font-weight:600;
+      font-size:18px;
+      box-shadow:0 6px 18px rgba(149,138,127,0.12);
+    }
+    h1{
+      margin:0;
+      font-size:28px;
+      font-weight:600;
+      letter-spacing:-0.02em;
+    }
+    p.lead{
+      margin-top:12px;
+      color:var(--muted);
+      font-weight:300;
+      max-width:54ch;
+    }
+
+    .controls{
+      margin-top:22px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .btn{
+      padding:12px 16px;
+      border-radius:12px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+      background:transparent;
+    }
+    .btn-cta{
+      background:linear-gradient(90deg,#7e9c98,#b89f8e);
+      color:white;
+      box-shadow:0 8px 20px rgba(126,156,152,0.14);
+    }
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(43,42,41,0.06);
+    }
+
+    .meta{
+      margin-top:20px;
+      font-size:13px;
+      color:var(--muted);
+      display:flex;
+      gap:18px;
+      align-items:center;
+    }
+
+    .aside{
+      background:linear-gradient(180deg, rgba(250,248,246,0.9), rgba(255,255,255,0.85));
+      border-radius:12px;
+      padding:18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
+      min-height:180px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:14px;
+    }
+
+    .card-title{
+      font-weight:600;
+      margin:0;
+      font-size:15px;
+    }
+    .small{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    footer{
+      grid-column:1 / -1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* accessible focus */
+    a, button { outline-color: transparent; }
+    button:focus, a:focus { outline: 3px solid rgba(153,153,153,0.12); outline-offset:4px; }
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main" aria-labelledby="main-title">
+    <section>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">CJ</div>
+        <div>
+          <div style="font-size:13px;color:var(--muted)">Cozy Minimal</div>
+          <h1 id="main-title">Slow down. Breathe. Stay cozy.</h1>
+        </div>
+      </div>
+
+      <p class="lead">A small corner on the web for slow moments — a place to share a menu, a project, or a tiny personal story. Minimal layout, soft tones, readable type, and simple interactions.</p>
+
+      <div class="controls" role="navigation" aria-label="Primary">
+        <a class="btn btn-cta" href="#learn">Explore</a>
+        <a class="btn btn-ghost" href="#about">About</a>
+      </div>
+
+      <div class="meta" aria-hidden="true">
+        <div>✦ Soft palette</div>
+        <div>✦ Calm type</div>
+        <div>✦ Mobile-first</div>
+      </div>
+    </section>
+
+    <aside class="aside" aria-labelledby="aside-title">
+      <div>
+        <h3 id="aside-title" class="card-title">Today’s tiny note</h3>
+        <div class="small">Take 5 minutes to step outside. Let sunlight in. That’s enough for now.</div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-top:8px">
+        <div style="font-size:13px;color:var(--muted)">Contact</div>
+        <div style="font-size:13px;color:var(--muted)">hello@youremail.com</div>
+      </div>
+    </aside>
+
+    <footer>
+      <div>© <span id="year"></span> Your Name</div>
+      <div style="opacity:0.9">Built with care • Minimal</div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
