@@ -16,7 +16,7 @@ body {
   align-items: center;
   justify-content: space-between;
   text-align: center;
-  overflow: hidden;
+  overflow-x: hidden;
   transition: 0.8s ease;
 }
 
@@ -82,6 +82,7 @@ footer {
   margin-bottom: 2rem;
 }
 
+/* Overlay animation */
 .overlay {
   position: fixed;
   width: 100%;
@@ -98,7 +99,7 @@ footer {
   to { transform: scale(1.05); }
 }
 
-/* 🌑 Dark (Aesthetic War) Mode */
+/* 🌙 Dark Mode */
 .dark {
   background: linear-gradient(135deg, #2b2d42, #3a0ca3, #4361ee);
 }
@@ -110,23 +111,57 @@ footer {
 .dark textarea {
   background: rgba(255, 255, 255, 0.1);
 }
-.floating-counter {
-  position: fixed;
-  bottom: 25px;
-  left: 25px;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 0.7rem 1.2rem;
-  border-radius: 12px;
-  color: #fff;
-  font-weight: 500;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  font-size: 0.95rem;
-  animation: fadeIn 1s ease;
-  z-index: 10;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+
+/* 💬 Comments */
+.comments {
+  text-align: left;
 }
 
+#commentList {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+}
+
+.comment {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.6rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* 👩‍💻 Study Widget */
+.study-widget {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 1s ease forwards;
+  z-index: 20;
+  text-align: left;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  width: fit-content;
+}
+
+.study-widget h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.study-widget p {
+  margin: 0.3rem 0 0 0;
+  opacity: 0.9;
+  font-size: 0.85rem;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
