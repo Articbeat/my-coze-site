@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cozy Study Space</title>
+  <title>☕ Cozy Study Space</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -28,7 +28,19 @@
       <h2>Your Notes</h2>
       <textarea id="noteArea" placeholder="Write your thoughts..."></textarea>
     </section>
+
+    <section class="comments">
+      <h2>💬 Study Chat</h2>
+      <div id="commentList"></div>
+      <textarea id="commentInput" placeholder="Share your thoughts..."></textarea>
+      <button id="addComment">Post</button>
+    </section>
   </main>
+
+  <div id="studyWidget" class="study-widget">
+    <h3>👩‍💻 <span id="studyCount">0</span> people studying with you</h3>
+    <p>You’re not alone — keep going ☕</p>
+  </div>
 
   <footer>
     <p>Made with 🩵 for calm minds.</p>
@@ -39,35 +51,10 @@
       <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2d74e6d541.mp3?filename=soft-rain-ambient-110449.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- 🎧 One Single Button -->
     <button id="soundToggle">🔈 Play Ambience</button>
-    <div id="studyCount" class="floating-counter">👩‍💻 128 people studying with you</div>
-
   </footer>
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
-  authDomain: "cozy-study-space.firebaseapp.com",
-  databaseURL: "https://cozy-study-space-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "cozy-study-space",
-  storageBucket: "cozy-study-space.firebasestorage.app",
-  messagingSenderId: "721938051355",
-  appId: "1:721938051355:web:00df438c75eda2f9dfe3be",
-  measurementId: "G-59EW1K4EN2"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-  <script src="script.js"></script>
+  <!-- Firebase + App -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
-
-
