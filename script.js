@@ -63,6 +63,20 @@ noteArea.addEventListener("input", () => {
 const themeToggle = document.getElementById("themeToggle");
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
+  // 👩‍💻 Fake Study Counter (realistic illusion)
+const studyCount = document.getElementById("studyCount");
+let count = Math.floor(80 + Math.random() * 40); // start between 80–120
+
+function randomFluctuation() {
+  const change = Math.random() > 0.5 ? 1 : -1;
+  count += change;
+  count = Math.max(60, Math.min(150, count)); // keep within 60–150 range
+  studyCount.textContent = `👩‍💻 ${count} people studying with you`;
+}
+
+setInterval(randomFluctuation, 4000); // update every 4 seconds
+
   const darkMode = document.body.classList.contains("dark");
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
+
