@@ -1,22 +1,29 @@
+// =====================================================
+// ☕ Cozy Study Space — Real-Time Comments + User Count
+// =====================================================
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Paste your Firebase config here:
+// ✅ Your Firebase Configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
+  authDomain: "cozy-study-space.firebaseapp.com",
+  databaseURL: "https://cozy-study-space-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cozy-study-space",
+  storageBucket: "cozy-study-space.firebasestorage.app",
+  messagingSenderId: "721938051355",
+  appId: "1:721938051355:web:00df438c75eda2f9dfe3be",
+  measurementId: "G-59EW1K4EN2"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🎧 Sound Toggle
+// =====================================================
+// 🎧 Ambient Sound Toggle
+// =====================================================
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
 let isPlaying = false;
@@ -32,7 +39,9 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
+// =====================================================
 // ⏳ Pomodoro Timer
+// =====================================================
 let totalTime = 25 * 60;
 let remaining = totalTime;
 let timer = null;
@@ -69,7 +78,9 @@ resetBtn.addEventListener("click", () => {
 
 updateTime();
 
-// 📝 Notes Auto-save
+// =====================================================
+// 📝 Notes Auto-Save
+// =====================================================
 const noteArea = document.getElementById("noteArea");
 noteArea.value = localStorage.getItem("cozyNotes") || "";
 
@@ -77,7 +88,9 @@ noteArea.addEventListener("input", () => {
   localStorage.setItem("cozyNotes", noteArea.value);
 });
 
+// =====================================================
 // 🌙 Theme Toggle
+// =====================================================
 const themeToggle = document.getElementById("themeToggle");
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
@@ -85,7 +98,9 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
 
-// 💬 Real-time Comments (Firebase)
+// =====================================================
+// 💬 Real-Time Comment Box (Firebase)
+// =====================================================
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
 const commentList = document.getElementById("commentList");
@@ -113,21 +128,28 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// 👩‍💻 Real-time User Counter (Firebase)
+// =====================================================
+// 👩‍💻 Real-Time User Counter (Firebase)
+// =====================================================
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
+// Remove user when leaving
 window.addEventListener("beforeunload", () => remove(thisUser));
 
 onValue(usersRef, (snapshot) => {
   const users = snapshot.val();
   const count = users ? Object.keys(users).length : 0;
-  studyCountDisplay.textContent = count;
+  if (studyCountDisplay) {
+    studyCountDisplay.textContent = count;
+  }
 });
 
-// ✨ Fade-in Animation for Widget
+// =====================================================
+// 🌸 Fade-In Animation for Widget
+// =====================================================
 window.addEventListener("load", () => {
   const widget = document.getElementById("studyWidget");
   if (widget) {
