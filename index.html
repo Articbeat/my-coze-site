@@ -44,8 +44,30 @@
     <div id="studyCount" class="floating-counter">👩‍💻 128 people studying with you</div>
 
   </footer>
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
+  authDomain: "cozy-study-space.firebaseapp.com",
+  databaseURL: "https://cozy-study-space-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cozy-study-space",
+  storageBucket: "cozy-study-space.firebasestorage.app",
+  messagingSenderId: "721938051355",
+  appId: "1:721938051355:web:00df438c75eda2f9dfe3be",
+  measurementId: "G-59EW1K4EN2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
   <script src="script.js"></script>
 </body>
 </html>
+
 
