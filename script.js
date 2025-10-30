@@ -21,9 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// =====================================================
 // 🎧 Ambient Sound Toggle
-// =====================================================
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
 let isPlaying = false;
@@ -39,9 +37,7 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// =====================================================
 // ⏳ Pomodoro Timer
-// =====================================================
 let totalTime = 25 * 60;
 let remaining = totalTime;
 let timer = null;
@@ -78,9 +74,7 @@ resetBtn.addEventListener("click", () => {
 
 updateTime();
 
-// =====================================================
 // 📝 Notes Auto-Save
-// =====================================================
 const noteArea = document.getElementById("noteArea");
 noteArea.value = localStorage.getItem("cozyNotes") || "";
 
@@ -88,9 +82,7 @@ noteArea.addEventListener("input", () => {
   localStorage.setItem("cozyNotes", noteArea.value);
 });
 
-// =====================================================
 // 🌙 Theme Toggle
-// =====================================================
 const themeToggle = document.getElementById("themeToggle");
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
@@ -98,9 +90,7 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
 
-// =====================================================
 // 💬 Real-Time Comment Box (Firebase)
-// =====================================================
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
 const commentList = document.getElementById("commentList");
@@ -109,7 +99,10 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
-    push(commentsRef, { text, timestamp: serverTimestamp() });
+    console.log("Posting comment:", text);
+    push(commentsRef, { text, timestamp: serverTimestamp() })
+      .then(() => console.log("✅ Comment sent"))
+      .catch(err => console.error("❌ Firebase error:", err));
     commentInput.value = "";
   }
 });
@@ -128,28 +121,21 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// =====================================================
 // 👩‍💻 Real-Time User Counter (Firebase)
-// =====================================================
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
-// Remove user when leaving
 window.addEventListener("beforeunload", () => remove(thisUser));
 
 onValue(usersRef, (snapshot) => {
   const users = snapshot.val();
   const count = users ? Object.keys(users).length : 0;
-  if (studyCountDisplay) {
-    studyCountDisplay.textContent = count;
-  }
+  studyCountDisplay.textContent = count;
 });
 
-// =====================================================
 // 🌸 Fade-In Animation for Widget
-// =====================================================
 window.addEventListener("load", () => {
   const widget = document.getElementById("studyWidget");
   if (widget) {
