@@ -38,7 +38,7 @@ soundToggle.addEventListener("click", () => {
 });
 
 // ⏳ Pomodoro Timer
-let totalTime = 25 * 60;
+let totalTime = 45 * 60;
 let remaining = totalTime;
 let timer = null;
 const timeDisplay = document.getElementById("time");
@@ -143,3 +143,4 @@ window.addEventListener("load", () => {
     setTimeout(() => (widget.style.opacity = "1"), 800);
   }
 });
+
