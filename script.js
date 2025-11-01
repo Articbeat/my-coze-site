@@ -3,7 +3,7 @@
 // =====================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // ✅ Your Firebase Configuration
 const firebaseConfig = {
@@ -121,26 +121,39 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// 👩‍💻 Real-Time User Counter (Firebase)
+// 🧍‍♀️ Live User Counter (Fixed)
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
+
+// Create a new record for this visitor
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
+// 🔌 Auto-remove this user when disconnected or tab closed
+onDisconnect(thisUser).remove();
 window.addEventListener("beforeunload", () => remove(thisUser));
 
+// 👥 Count active users (only recent ones)
 onValue(usersRef, (snapshot) => {
-  const users = snapshot.val();
-  const count = users ? Object.keys(users).length : 0;
+  const data = snapshot.val();
+  const now = Date.now();
+  let count = 0;
+
+  if (data) {
+    for (const id in data) {
+      const joinedTime = data[id].joined?.seconds * 1000 || data[id].joined;
+      // Only count users active within the last 10 minutes
+      if (now - joinedTime < 10 * 60 * 1000) {
+        count++;
+      } else {
+        // Clean up old inactive entries
+        remove(ref(db, "activeUsers/" + id));
+      }
+    }
+  }
+
   studyCountDisplay.textContent = count;
 });
 
-// 🌸 Fade-In Animation for Widget
-window.addEventListener("load", () => {
-  const widget = document.getElementById("studyWidget");
-  if (widget) {
-    widget.style.opacity = "0";
-    setTimeout(() => (widget.style.opacity = "1"), 800);
-  }
-});
+
 
