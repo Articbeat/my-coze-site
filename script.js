@@ -154,52 +154,50 @@ onValue(usersRef, (snapshot) => {
 
   studyCountDisplay.textContent = count;
 });
-// ✨ Floating Dust / Glitter Effect
+// ✨ Dream Glitter
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
-
 let particles = [];
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+addEventListener("resize", resizeCanvas);
+function resizeCanvas() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
 
-// Create random particles
-for (let i = 0; i < 80; i++) {
+for (let i = 0; i < 120; i++) {
   particles.push({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    size: Math.random() * 2 + 0.5, // small dots
-    speedX: (Math.random() - 0.5) * 0.2,
-    speedY: (Math.random() - 0.5) * 0.2,
-    opacity: Math.random() * 0.6 + 0.2
+    x: Math.random() * innerWidth,
+    y: Math.random() * innerHeight,
+    size: Math.random() * 1.8 + 0.5,
+    speedX: (Math.random() - 0.5) * 0.15,
+    speedY: (Math.random() - 0.5) * 0.15,
+    opacity: Math.random() * 0.4 + 0.3
   });
 }
 
-function drawParticles() {
+function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   particles.forEach(p => {
+    p.x += p.speedX;
+    p.y += p.speedY;
+    p.opacity += (Math.random() - 0.5) * 0.04;
+    p.opacity = Math.max(0.1, Math.min(0.8, p.opacity));
+
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+    ctx.shadowColor = "rgba(255,255,255,1)";
+    ctx.shadowBlur = 5;
     ctx.fill();
-    p.x += p.speedX;
-    p.y += p.speedY;
+    ctx.shadowBlur = 0;
 
-    // soft wraparound edges
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
+    if (p.x < 0) p.x = innerWidth;
+    if (p.x > innerWidth) p.x = 0;
+    if (p.y < 0) p.y = innerHeight;
+    if (p.y > innerHeight) p.y = 0;
   });
-  requestAnimationFrame(drawParticles);
+  requestAnimationFrame(draw);
 }
-
-drawParticles();
-
-
-
-
+draw();
