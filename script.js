@@ -154,7 +154,7 @@ onValue(usersRef, (snapshot) => {
 
   studyCountDisplay.textContent = count;
 });
-// ✨ Dream Glitter
+// 🌌 Midnight Chill Particles
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
@@ -166,14 +166,14 @@ function resizeCanvas() {
   canvas.height = innerHeight;
 }
 
-for (let i = 0; i < 120; i++) {
+for (let i = 0; i < 80; i++) {
   particles.push({
     x: Math.random() * innerWidth,
     y: Math.random() * innerHeight,
-    size: Math.random() * 1.8 + 0.5,
-    speedX: (Math.random() - 0.5) * 0.15,
-    speedY: (Math.random() - 0.5) * 0.15,
-    opacity: Math.random() * 0.4 + 0.3
+    size: Math.random() * 3 + 1,
+    speedX: (Math.random() - 0.5) * 0.2,
+    speedY: (Math.random() - 0.5) * 0.2,
+    opacity: Math.random() * 0.6 + 0.2
   });
 }
 
@@ -182,14 +182,14 @@ function draw() {
   particles.forEach(p => {
     p.x += p.speedX;
     p.y += p.speedY;
-    p.opacity += (Math.random() - 0.5) * 0.04;
-    p.opacity = Math.max(0.1, Math.min(0.8, p.opacity));
+    p.opacity += (Math.random() - 0.5) * 0.02;
+    p.opacity = Math.max(0.1, Math.min(0.7, p.opacity));
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-    ctx.shadowColor = "rgba(255,255,255,1)";
-    ctx.shadowBlur = 5;
+    ctx.fillStyle = `rgba(180, 210, 255, ${p.opacity})`;
+    ctx.shadowColor = "rgba(140, 190, 255, 0.8)";
+    ctx.shadowBlur = 4;
     ctx.fill();
     ctx.shadowBlur = 0;
 
@@ -201,3 +201,4 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
+
