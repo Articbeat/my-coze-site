@@ -33,15 +33,16 @@
       <h2>Focus Timer</h2>
       <div id="time">25:00</div>
       <div class="controls">
-        <select id="timeSelect">
-  <option value="25">25 minutes</option>
-  <option value="45">45 minutes</option>
-  <option value="60">60 minutes</option>
-  <option value="90">90 minutes</option>
-</select>
+        <div class="time-options">
+  <button class="time-btn active" data-min="25">25m</button>
+  <button class="time-btn" data-min="45">45m</button>
+  <button class="time-btn" data-min="60">60m</button>
+  <button class="time-btn" data-min="90">90m</button>
+</div>
 
-        <button id="start">Start</button>
-        <button id="reset">Reset</button>
+<button id="start">Start</button>
+<button id="reset">Reset</button>
+
       </div>
     </section>
 
@@ -79,6 +80,7 @@
   <script type="module" src="script.js"></script>
 </body>
 </html>
+
 
 
 
