@@ -3,63 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>☕ Cozy Study Space</title>
+  <title>The Arctic Den</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script type="module" src="script.js" defer></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/616/616408.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <!-- Background Canvas -->
   <canvas id="particleCanvas"></canvas>
-  <div class="overlay"></div>
 
-  <!-- 🌐 Social Icons -->
-  <div class="social-links">
-    <a href="https://twitch.tv/username" target="_blank" class="social-icon"><i class="fab fa-twitch"></i></a>
-    <a href="https://youtube.com/@username" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
-    <a href="https://github.com/username" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
+  <!-- Fixed Social Icons -->
+  <div class="social-icons">
+    <a href="https://twitch.tv" target="_blank"><i class="fa-brands fa-twitch"></i></a>
+    <a href="https://youtube.com" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+    <a href="https://github.com" target="_blank"><i class="fa-brands fa-github"></i></a>
   </div>
 
-  <header>
-    <h1>☕ Cozy Study Space</h1>
-    <button id="themeToggle">🌙 Switch Theme</button>
-  </header>
+  <!-- Main Container -->
+  <div class="container">
+    <h1>❄️ The Arctic Den</h1>
+    <p>Study • Chill • Create</p>
 
-  <main>
-    <section class="timer">
-      <h2>Focus Timer</h2>
-      <div id="time">25:00</div>
-      <div class="controls">
-        <button id="start">Start</button>
-        <button id="reset">Reset</button>
-      </div>
-    </section>
+    <!-- Pomodoro Timer -->
+    <div class="timer">
+      <h2 id="time">25:00</h2>
+      <button id="start">Start</button>
+      <button id="reset">Reset</button>
+    </div>
 
-    <section class="notes">
-      <h2>Your Notes</h2>
-      <textarea id="noteArea" placeholder="Write your thoughts..."></textarea>
-    </section>
+    <!-- Notes -->
+    <textarea id="noteArea" placeholder="Write your thoughts or notes here..."></textarea>
 
-    <section class="comments">
-      <h2>💬 Study Chat</h2>
-      <div id="commentList"></div>
-      <textarea id="commentInput" placeholder="Share your thoughts..."></textarea>
+    <!-- Comment Section -->
+    <div class="comments-section">
+      <input id="commentInput" placeholder="Share your thoughts..." />
       <button id="addComment">Post</button>
-    </section>
-  </main>
+      <div id="commentList"></div>
+    </div>
 
-  <div id="studyWidget" class="study-widget">
-    <h3>👩‍💻 <span id="studyCount">0</span> people studying with you</h3>
-    <p>You’re not alone — keep going ☕</p>
-  </div>
+    <!-- User Counter -->
+    <p>👥 Active users: <span id="studyCount">0</span></p>
 
-  <footer>
-    <p>Made with 🩵 for calm minds.</p>
+    <!-- Controls -->
+    <div class="controls">
+      <button id="soundToggle">🔈 Play Ambience</button>
+      <button id="themeToggle">🌙 Switch Theme</button>
+    </div>
+
     <audio id="ambient" loop>
-      <source src="lofi.mp3" type="audio/mpeg">
-      <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2d74e6d541.mp3?filename=soft-rain-ambient-110449.mp3" type="audio/mpeg">
+      <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9fa8e279f3.mp3" type="audio/mpeg" />
     </audio>
-    <button id="soundToggle">🔈 Play Ambience</button>
-  </footer>
-
-  <script type="module" src="script.js"></script>
+  </div>
 </body>
 </html>
