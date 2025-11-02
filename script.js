@@ -1,11 +1,11 @@
 // =====================================================
-// ☕ Cozy Study Space — Real-Time Comments + User Count
+// ☕ The Artic Den — Real-Time Comments + User Count + Bubble Timer
 // =====================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Your Firebase Configuration
+// ✅ Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
   authDomain: "cozy-study-space.firebaseapp.com",
@@ -37,9 +37,8 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// ⏳ Pomodoro Timer (Now Selectable)
-const timeSelect = document.getElementById("timeSelect");
-let totalTime = parseInt(timeSelect.value) * 60;
+// ⏳ Pomodoro Timer (Bubble Buttons)
+let totalTime = 25 * 60; // default 25 minutes
 let remaining = totalTime;
 let timer = null;
 
@@ -47,6 +46,20 @@ const timeDisplay = document.getElementById("time");
 const startBtn = document.getElementById("start");
 const resetBtn = document.getElementById("reset");
 
+// 🕒 Time selection bubbles
+const timeButtons = document.querySelectorAll(".time-btn");
+
+timeButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    totalTime = parseInt(btn.getAttribute("data-min")) * 60;
+    remaining = totalTime;
+    updateTime();
+
+    // highlight active bubble
+    timeButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  });
+});
 
 function updateTime() {
   const mins = Math.floor(remaining / 60);
@@ -60,8 +73,6 @@ startBtn.addEventListener("click", () => {
     if (remaining <= 0) {
       clearInterval(timer);
       alert("Time’s up! Take a break ☕");
-      remaining = totalTime;
-      updateTime();
       return;
     }
     remaining--;
@@ -69,14 +80,11 @@ startBtn.addEventListener("click", () => {
   }, 1000);
 });
 
-
 resetBtn.addEventListener("click", () => {
   clearInterval(timer);
-  totalTime = parseInt(timeSelect.value) * 60;
   remaining = totalTime;
   updateTime();
 });
-
 
 updateTime();
 
@@ -105,7 +113,6 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
-    console.log("Posting comment:", text);
     push(commentsRef, { text, timestamp: serverTimestamp() })
       .then(() => console.log("✅ Comment sent"))
       .catch(err => console.error("❌ Firebase error:", err));
@@ -127,19 +134,19 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// 🧍‍♀️ Live User Counter (Fixed)
+// 🧍‍♀️ Live User Counter
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
 
-// Create a new record for this visitor
+// Create a record for this visitor
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
-// 🔌 Auto-remove this user when disconnected or tab closed
+// Auto-remove this user when tab closed or disconnected
 onDisconnect(thisUser).remove();
 window.addEventListener("beforeunload", () => remove(thisUser));
 
-// 👥 Count active users (only recent ones)
+// Count active users (last 10 minutes)
 onValue(usersRef, (snapshot) => {
   const data = snapshot.val();
   const now = Date.now();
@@ -148,11 +155,9 @@ onValue(usersRef, (snapshot) => {
   if (data) {
     for (const id in data) {
       const joinedTime = data[id].joined?.seconds * 1000 || data[id].joined;
-      // Only count users active within the last 10 minutes
       if (now - joinedTime < 10 * 60 * 1000) {
         count++;
       } else {
-        // Clean up old inactive entries
         remove(ref(db, "activeUsers/" + id));
       }
     }
@@ -160,6 +165,7 @@ onValue(usersRef, (snapshot) => {
 
   studyCountDisplay.textContent = count;
 });
+
 // 🌌 Midnight Chill Particles
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
@@ -207,5 +213,3 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
-
-
