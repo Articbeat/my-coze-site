@@ -1,11 +1,11 @@
 // =====================================================
-// ☕ Cozy Study Space — Real-Time Comments + User Count + Particles
+// ☕ Cozy Study Space — Real-Time Comments + User Count
 // =====================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Firebase Config
+// ✅ Your Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
   authDomain: "cozy-study-space.firebaseapp.com",
@@ -13,15 +13,15 @@ const firebaseConfig = {
   projectId: "cozy-study-space",
   storageBucket: "cozy-study-space.firebasestorage.app",
   messagingSenderId: "721938051355",
-  appId: "1:721938051355:web:00df438c75eda2f9dfe3be"
+  appId: "1:721938051355:web:00df438c75eda2f9dfe3be",
+  measurementId: "G-59EW1K4EN2"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// =====================================================
 // 🎧 Ambient Sound Toggle
-// =====================================================
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
 let isPlaying = false;
@@ -37,10 +37,8 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// =====================================================
 // ⏳ Pomodoro Timer
-// =====================================================
-let totalTime = 25 * 60;
+let totalTime = 45 * 60;
 let remaining = totalTime;
 let timer = null;
 const timeDisplay = document.getElementById("time");
@@ -76,9 +74,7 @@ resetBtn.addEventListener("click", () => {
 
 updateTime();
 
-// =====================================================
 // 📝 Notes Auto-Save
-// =====================================================
 const noteArea = document.getElementById("noteArea");
 noteArea.value = localStorage.getItem("cozyNotes") || "";
 
@@ -86,9 +82,7 @@ noteArea.addEventListener("input", () => {
   localStorage.setItem("cozyNotes", noteArea.value);
 });
 
-// =====================================================
 // 🌙 Theme Toggle
-// =====================================================
 const themeToggle = document.getElementById("themeToggle");
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
@@ -96,9 +90,7 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
 
-// =====================================================
-// 💬 Real-Time Comments
-// =====================================================
+// 💬 Real-Time Comment Box (Firebase)
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
 const commentList = document.getElementById("commentList");
@@ -107,7 +99,10 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
-    push(commentsRef, { text, timestamp: serverTimestamp() });
+    console.log("Posting comment:", text);
+    push(commentsRef, { text, timestamp: serverTimestamp() })
+      .then(() => console.log("✅ Comment sent"))
+      .catch(err => console.error("❌ Firebase error:", err));
     commentInput.value = "";
   }
 });
@@ -126,66 +121,38 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// =====================================================
-// 👩‍💻 Real-Time User Counter
-// =====================================================
+// 🧍‍♀️ Live User Counter (Fixed)
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
+
+// Create a new record for this visitor
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
+// 🔌 Auto-remove this user when disconnected or tab closed
+onDisconnect(thisUser).remove();
 window.addEventListener("beforeunload", () => remove(thisUser));
 
+// 👥 Count active users (only recent ones)
 onValue(usersRef, (snapshot) => {
-  const users = snapshot.val();
-  const count = users ? Object.keys(users).length : 0;
-  if (studyCountDisplay) {
-    studyCountDisplay.textContent = count;
+  const data = snapshot.val();
+  const now = Date.now();
+  let count = 0;
+
+  if (data) {
+    for (const id in data) {
+      const joinedTime = data[id].joined?.seconds * 1000 || data[id].joined;
+      // Only count users active within the last 10 minutes
+      if (now - joinedTime < 10 * 60 * 1000) {
+        count++;
+      } else {
+        // Clean up old inactive entries
+        remove(ref(db, "activeUsers/" + id));
+      }
+    }
   }
+
+  studyCountDisplay.textContent = count;
 });
 
-// =====================================================
-// 🌸 Particles Background
-// =====================================================
-const canvas = document.getElementById("particleCanvas");
-const ctx = canvas.getContext("2d");
-let particles = [];
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resize);
-resize();
-
-function createParticles() {
-  particles = [];
-  for (let i = 0; i < 60; i++) {
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 2 + 1,
-      dx: (Math.random() - 0.5) * 0.5,
-      dy: (Math.random() - 0.5) * 0.5
-    });
-  }
-}
-
-function drawParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-  for (let p of particles) {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fill();
-    p.x += p.dx;
-    p.y += p.dy;
-
-    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-  }
-  requestAnimationFrame(drawParticles);
-}
-
-createParticles();
-drawParticles();
