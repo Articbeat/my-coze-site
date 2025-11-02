@@ -1,222 +1,210 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+// =====================================================
+// ☕ Cozy Study Space — Real-Time Comments + User Count
+// =====================================================
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-body {
-  min-height: 100vh;
-  color: #fff;
-  background: linear-gradient(135deg, #a0c4ff, #bdb2ff, #ffc6ff);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-  overflow-x: hidden;
-  transition: 0.8s ease;
-}
+// ✅ Your Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
+  authDomain: "cozy-study-space.firebaseapp.com",
+  databaseURL: "https://cozy-study-space-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cozy-study-space",
+  storageBucket: "cozy-study-space.firebasestorage.app",
+  messagingSenderId: "721938051355",
+  appId: "1:721938051355:web:00df438c75eda2f9dfe3be",
+  measurementId: "G-59EW1K4EN2"
+};
 
-header {
-  margin-top: 2rem;
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-h1 {
-  font-size: 2rem;
-  letter-spacing: 1px;
-}
+// 🎧 Ambient Sound Toggle
+const soundToggle = document.getElementById("soundToggle");
+const ambient = document.getElementById("ambient");
+let isPlaying = false;
 
-button {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-main {
-  display: flex;
-  gap: 2rem;
-  margin: 2rem 0;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-section {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 1.5rem;
-  backdrop-filter: blur(15px);
-  width: 280px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-#time {
-  font-size: 2.5rem;
-  margin: 1rem 0;
-}
-
-textarea {
-  width: 100%;
-  height: 150px;
-  border: none;
-  outline: none;
-  border-radius: 10px;
-  padding: 10px;
-  resize: none;
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-}
-
-footer {
-  margin-bottom: 2rem;
-}
-
-/* Overlay animation */
-.overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: radial-gradient(circle, rgba(255,255,255,0.1), rgba(0,0,0,0.3));
-  z-index: -1;
-  animation: float 10s infinite alternate ease-in-out;
-}
-
-@keyframes float {
-  from { transform: scale(1); }
-  to { transform: scale(1.05); }
-}
-
-/* 🌙 Dark Mode */
-.dark {
-  background: linear-gradient(135deg, #2b2d42, #3a0ca3, #4361ee);
-}
-
-.dark section {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.dark textarea {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* 💬 Comments */
-.comments {
-  text-align: left;
-}
-
-#commentList {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-bottom: 0.5rem;
-}
-
-.comment {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.6rem;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-/* 👩‍💻 Study Widget */
-.study-widget {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 1rem 1.5rem;
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  animation: fadeInUp 1s ease forwards;
-  z-index: 20;
-  text-align: left;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  width: fit-content;
-}
-
-.study-widget h3 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.study-widget p {
-  margin: 0.3rem 0 0 0;
-  opacity: 0.9;
-  font-size: 0.85rem;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-/* 🌐 Floating Social Bar (fixed + visible) */
-.floating-socials {
-  position: fixed;
-  top: 50%;
-  left: 25px; /* change to right: 25px; if you prefer */
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  z-index: 9999;
-  opacity: 0.9;
-}
-
-.floating-socials a img {
-  width: 32px; /* larger and visible */
-  height: 32px;
-  filter: invert(1);
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-.floating-socials a img:hover {
-  opacity: 1;
-  transform: scale(1.2);
-  filter: invert(80%) sepia(60%) saturate(400%) hue-rotate(180deg);
-}
-
-/* Fade in smoothly */
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translate(-20px, -50%);
+soundToggle.addEventListener("click", () => {
+  if (!isPlaying) {
+    ambient.play().catch(err => console.log("Audio playback blocked:", err));
+    soundToggle.textContent = "🔇 Stop Ambience";
+  } else {
+    ambient.pause();
+    soundToggle.textContent = "🔈 Play Ambience";
   }
-  to {
-    opacity: 1;
-    transform: translate(0, -50%);
+  isPlaying = !isPlaying;
+});
+
+// ⏳ Pomodoro Timer
+let totalTime = 45 * 60;
+let remaining = totalTime;
+let timer = null;
+const timeDisplay = document.getElementById("time");
+const startBtn = document.getElementById("start");
+const resetBtn = document.getElementById("reset");
+
+function updateTime() {
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  timeDisplay.textContent = `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+}
+
+startBtn.addEventListener("click", () => {
+  clearInterval(timer);
+  timer = setInterval(() => {
+    if (remaining <= 0) {
+      clearInterval(timer);
+      alert("Time’s up! Take a break ☕");
+      remaining = totalTime;
+      updateTime();
+      return;
+    }
+    remaining--;
+    updateTime();
+  }, 1000);
+});
+
+resetBtn.addEventListener("click", () => {
+  clearInterval(timer);
+  remaining = totalTime;
+  updateTime();
+});
+
+updateTime();
+
+// 📝 Notes Auto-Save
+const noteArea = document.getElementById("noteArea");
+noteArea.value = localStorage.getItem("cozyNotes") || "";
+
+noteArea.addEventListener("input", () => {
+  localStorage.setItem("cozyNotes", noteArea.value);
+});
+
+// 🌙 Theme Toggle
+const themeToggle = document.getElementById("themeToggle");
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const darkMode = document.body.classList.contains("dark");
+  themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
+});
+
+// 💬 Real-Time Comment Box (Firebase)
+const commentInput = document.getElementById("commentInput");
+const addComment = document.getElementById("addComment");
+const commentList = document.getElementById("commentList");
+const commentsRef = ref(db, "comments");
+
+addComment.addEventListener("click", () => {
+  const text = commentInput.value.trim();
+  if (text) {
+    push(commentsRef, { text, timestamp: serverTimestamp() })
+      .then(() => console.log("✅ Comment sent"))
+      .catch(err => console.error("❌ Firebase error:", err));
+    commentInput.value = "";
   }
+});
+
+onValue(commentsRef, (snapshot) => {
+  const data = snapshot.val();
+  commentList.innerHTML = "";
+  if (data) {
+    const sorted = Object.entries(data).sort((a, b) => {
+      const t1 = a[1].timestamp?.seconds ?? 0;
+      const t2 = b[1].timestamp?.seconds ?? 0;
+      return t1 - t2;
+    });
+    for (let [id, c] of sorted) {
+      const div = document.createElement("div");
+      div.classList.add("comment");
+      div.textContent = c.text;
+      commentList.appendChild(div);
+    }
+  }
+});
+
+// 🧍‍♀️ Live User Counter (Fixed)
+const usersRef = ref(db, "activeUsers");
+const studyCountDisplay = document.getElementById("studyCount");
+
+// Create a new record for this visitor
+const thisUser = push(usersRef);
+set(thisUser, { joined: serverTimestamp() });
+
+// 🔌 Auto-remove this user when disconnected or tab closed
+onDisconnect(thisUser).remove();
+window.addEventListener("beforeunload", () => remove(thisUser));
+
+// 👥 Count active users (only recent ones)
+onValue(usersRef, (snapshot) => {
+  const data = snapshot.val();
+  const now = Date.now();
+  let count = 0;
+
+  if (data) {
+    for (const id in data) {
+      const joinedTime = data[id].joined
+        ? data[id].joined.seconds
+          ? data[id].joined.seconds * 1000
+          : data[id].joined
+        : 0;
+      if (now - joinedTime < 10 * 60 * 1000) {
+        count++;
+      } else {
+        remove(ref(db, "activeUsers/" + id));
+      }
+    }
+  }
+
+  studyCountDisplay.textContent = count;
+});
+
+// 🌌 Midnight Chill Particles
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particles = [];
+
+resizeCanvas();
+addEventListener("resize", resizeCanvas);
+
+function resizeCanvas() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
 }
 
-.floating-socials {
-  animation: fadeInLeft 1s ease;
-}
-/* ✨ Floating Dust / Glitter Particles */
-#particles {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none; /* so clicks go through it */
-  background: transparent;
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * innerWidth,
+    y: Math.random() * innerHeight,
+    size: Math.random() * 3 + 1,
+    speedX: (Math.random() - 0.5) * 0.2,
+    speedY: (Math.random() - 0.5) * 0.2,
+    opacity: Math.random() * 0.6 + 0.2
+  });
 }
 
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.speedX;
+    p.y += p.speedY;
+    p.opacity += (Math.random() - 0.5) * 0.02;
+    p.opacity = Math.max(0.1, Math.min(0.7, p.opacity));
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(180, 210, 255, ${p.opacity})`;
+    ctx.shadowColor = "rgba(140, 190, 255, 0.8)";
+    ctx.shadowBlur = 4;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    if (p.x < 0) p.x = innerWidth;
+    if (p.x > innerWidth) p.x = 0;
+    if (p.y < 0) p.y = innerHeight;
+    if (p.y > innerHeight) p.y = 0;
+  });
+  requestAnimationFrame(draw);
+}
+draw();
