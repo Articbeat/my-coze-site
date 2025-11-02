@@ -199,12 +199,7 @@ function draw() {
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    //ctx.fillStyle = `rgba(180, 210, 255, ${p.opacity})`;
-    const isDark = document.body.classList.contains("dark");
-const baseColor = isDark
-  ? "rgba(180, 210, 255,"   // soft blue for dark mode
-  : "rgba(100, 120, 160,";  // darker tone for light mode
-ctx.fillStyle = `${baseColor} ${p.opacity})`;
+    ctx.fillStyle = `rgba(180, 210, 255, ${p.opacity})`;
 
     ctx.shadowColor = "rgba(140, 190, 255, 0.8)";
     ctx.shadowBlur = 4;
