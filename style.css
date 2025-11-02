@@ -55,26 +55,6 @@ main {
   justify-content: center;
 }
 
-/* 🕒 Clean Minimal Dropdown */
-.minimal-select {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
-  color: #fff;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: 0.3s;
-  backdrop-filter: blur(5px);
-}
-
-.minimal-select:hover,
-.minimal-select:focus {
-  border-color: #a7baff;
-  background: rgba(255, 255, 255, 0.1);
-  outline: none;
-}
-
 .notes textarea,
 .comments textarea {
   width: 280px;
