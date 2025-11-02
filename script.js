@@ -1,27 +1,22 @@
-// =====================================================
-// ☕ The Artic Den — Calm Focus Space (Original Version)
-// =====================================================
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Firebase Config
+// ✅ Paste your Firebase config here:
 const firebaseConfig = {
-  apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
-  authDomain: "cozy-study-space.firebaseapp.com",
-  databaseURL: "https://cozy-study-space-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "cozy-study-space",
-  storageBucket: "cozy-study-space.firebasestorage.app",
-  messagingSenderId: "721938051355",
-  appId: "1:721938051355:web:00df438c75eda2f9dfe3be",
-  measurementId: "G-59EW1K4EN2"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🎧 Ambient Music
+// 🎧 Sound Toggle
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
 let isPlaying = false;
@@ -37,7 +32,7 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// ⏳ 25-Minute Timer
+// ⏳ Pomodoro Timer
 let totalTime = 25 * 60;
 let remaining = totalTime;
 let timer = null;
@@ -74,9 +69,10 @@ resetBtn.addEventListener("click", () => {
 
 updateTime();
 
-// 📝 Notes Auto-Save
+// 📝 Notes Auto-save
 const noteArea = document.getElementById("noteArea");
 noteArea.value = localStorage.getItem("cozyNotes") || "";
+
 noteArea.addEventListener("input", () => {
   localStorage.setItem("cozyNotes", noteArea.value);
 });
@@ -89,7 +85,7 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
 
-// 💬 Comments (Firebase)
+// 💬 Real-time Comments (Firebase)
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
 const commentList = document.getElementById("commentList");
@@ -117,75 +113,25 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// 👥 Live User Counter
+// 👩‍💻 Real-time User Counter (Firebase)
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
-onDisconnect(thisUser).remove();
 window.addEventListener("beforeunload", () => remove(thisUser));
 
 onValue(usersRef, (snapshot) => {
-  const data = snapshot.val();
-  const now = Date.now();
-  let count = 0;
-
-  if (data) {
-    for (const id in data) {
-      const joinedTime = data[id].joined?.seconds * 1000 || data[id].joined;
-      if (now - joinedTime < 10 * 60 * 1000) count++;
-      else remove(ref(db, "activeUsers/" + id));
-    }
-  }
-
+  const users = snapshot.val();
+  const count = users ? Object.keys(users).length : 0;
   studyCountDisplay.textContent = count;
 });
 
-// 🌌 Background Particles
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-let particles = [];
-
-resizeCanvas();
-addEventListener("resize", resizeCanvas);
-function resizeCanvas() {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-}
-
-for (let i = 0; i < 80; i++) {
-  particles.push({
-    x: Math.random() * innerWidth,
-    y: Math.random() * innerHeight,
-    size: Math.random() * 3 + 1,
-    speedX: (Math.random() - 0.5) * 0.2,
-    speedY: (Math.random() - 0.5) * 0.2,
-    opacity: Math.random() * 0.6 + 0.2
-  });
-}
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => {
-    p.x += p.speedX;
-    p.y += p.speedY;
-    p.opacity += (Math.random() - 0.5) * 0.02;
-    p.opacity = Math.max(0.1, Math.min(0.7, p.opacity));
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(180, 210, 255, ${p.opacity})`;
-    ctx.shadowColor = "rgba(140, 190, 255, 0.8)";
-    ctx.shadowBlur = 4;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    if (p.x < 0) p.x = innerWidth;
-    if (p.x > innerWidth) p.x = 0;
-    if (p.y < 0) p.y = innerHeight;
-    if (p.y > innerHeight) p.y = 0;
-  });
-  requestAnimationFrame(draw);
-}
-draw();
+// ✨ Fade-in Animation for Widget
+window.addEventListener("load", () => {
+  const widget = document.getElementById("studyWidget");
+  if (widget) {
+    widget.style.opacity = "0";
+    setTimeout(() => (widget.style.opacity = "1"), 800);
+  }
+});
