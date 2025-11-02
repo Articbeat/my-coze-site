@@ -135,7 +135,7 @@ const studyCountDisplay = document.getElementById("studyCount");
 
 // Create a new record for this visitor
 const thisUser = push(usersRef);
-set(thisUser, { joined: Date.mow() });
+set(thisUser, { joined: Date.now() });
 
 // 🔌 Auto-remove this user when disconnected or tab closed
 onDisconnect(thisUser).remove();
@@ -214,6 +214,7 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
+
 
 
 
