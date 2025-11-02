@@ -11,8 +11,7 @@
 body {
   min-height: 100vh;
   color: #fff;
-  /* ORIGINAL gradient colors restored */
-  background: linear-gradient(135deg, #89c2d9, #f3c4fb, #ffb6b9);
+  background: linear-gradient(135deg, #a0c4ff, #bdb2ff, #ffc6ff);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,8 +41,7 @@ body {
   height: 100%;
   z-index: 1;
   pointer-events: none;
-  /* Slightly dimmed overlay like original */
-  background: rgba(255, 255, 255, 0.05);
+  background: transparent;
 }
 
 /* ===== Header ===== */
@@ -83,8 +81,7 @@ main {
 }
 
 section {
-  /* Slightly more opaque like original */
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   padding: 1.5rem;
   backdrop-filter: blur(15px);
@@ -105,8 +102,7 @@ textarea {
   border-radius: 10px;
   padding: 10px;
   resize: none;
-  /* Original opacity */
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
@@ -122,7 +118,7 @@ textarea {
 }
 
 .comment {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
   padding: 0.6rem;
   border-radius: 8px;
   margin-bottom: 0.5rem;
