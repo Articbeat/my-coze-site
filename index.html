@@ -12,37 +12,36 @@
   <div class="overlay"></div>
 
   <header>
-    <h1>☕ The Artic Den </h1>
+    <h1>☕ The Artic Den</h1>
     <button id="themeToggle">🌙 Switch Theme</button>
   </header>
-<!-- 🌐 Floating Social Icons -->
-<div class="floating-socials">
-  <a href="https://youtube.com/@articbeat-02" target="_blank" title="YouTube">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube">
-  </a>
-  <a href="https://github.com/Articbeat" target="_blank" title="GitHub">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub">
-  </a>
-  <a href= "https://twitch.tv/Articbeat28" target="_blank" title="Twitch">
-    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitch.svg" alt="Twitch">
-  </a>
-</div>
+
+  <!-- 🌐 Floating Social Icons -->
+  <div class="floating-socials">
+    <a href="https://youtube.com/@articbeat-02" target="_blank" title="YouTube">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg" alt="YouTube">
+    </a>
+    <a href="https://github.com/Articbeat" target="_blank" title="GitHub">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub">
+    </a>
+    <a href="https://twitch.tv/Articbeat28" target="_blank" title="Twitch">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitch.svg" alt="Twitch">
+    </a>
+  </div>
 
   <main>
     <section class="timer">
       <h2>Focus Timer</h2>
       <div id="time">25:00</div>
       <div class="controls">
-        <div class="time-options">
-  <button class="time-btn active" data-min="25">25m</button>
-  <button class="time-btn" data-min="45">45m</button>
-  <button class="time-btn" data-min="60">60m</button>
-  <button class="time-btn" data-min="90">90m</button>
-</div>
-
-<button id="start">Start</button>
-<button id="reset">Reset</button>
-
+        <select id="timeSelect" class="minimal-select">
+          <option value="25">25 min</option>
+          <option value="45">45 min</option>
+          <option value="60">1 hr</option>
+          <option value="90">1.5 hr</option>
+        </select>
+        <button id="start">Start</button>
+        <button id="reset">Reset</button>
       </div>
     </section>
 
@@ -80,15 +79,3 @@
   <script type="module" src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
