@@ -42,6 +42,8 @@ body {
   background: radial-gradient(circle, rgba(255,255,255,0.1), rgba(0,0,0,0.3));
   z-index: 0;
   animation: float 10s infinite alternate ease-in-out;
+  pointer-events: none;
+
 }
 
 @keyframes float {
@@ -51,7 +53,9 @@ body {
 
 /* ====== Header ====== */
 header {
+  position: relative;
   margin-top: 2rem;
+  z-index: 10;
 }
 
 h1 {
@@ -131,6 +135,8 @@ textarea {
 /* ====== Footer ====== */
 footer {
   margin-bottom: 2rem;
+   position: relative; /* make z-index effective */
+  z-index: 10;
 }
 
 /* ====== Study Widget ====== */
@@ -218,3 +224,4 @@ footer {
 .dark .floating-socials a img {
   filter: invert(0.9);
 }
+
