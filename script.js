@@ -37,13 +37,16 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// ⏳ Pomodoro Timer
-let totalTime = 45 * 60;
+// ⏳ Pomodoro Timer (Now Selectable)
+const timeSelect = document.getElementById("timeSelect");
+let totalTime = parseInt(timeSelect.value) * 60;
 let remaining = totalTime;
 let timer = null;
+
 const timeDisplay = document.getElementById("time");
 const startBtn = document.getElementById("start");
 const resetBtn = document.getElementById("reset");
+
 
 function updateTime() {
   const mins = Math.floor(remaining / 60);
@@ -66,11 +69,14 @@ startBtn.addEventListener("click", () => {
   }, 1000);
 });
 
+
 resetBtn.addEventListener("click", () => {
   clearInterval(timer);
+  totalTime = parseInt(timeSelect.value) * 60;
   remaining = totalTime;
   updateTime();
 });
+
 
 updateTime();
 
@@ -201,4 +207,5 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
+
 
