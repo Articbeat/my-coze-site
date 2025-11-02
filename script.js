@@ -1,3 +1,7 @@
+// =====================================================
+// ☕ The Artic Den — Calm Focus Space (Original Version)
+// =====================================================
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
@@ -13,10 +17,11 @@ const firebaseConfig = {
   measurementId: "G-59EW1K4EN2"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🎵 Ambient Sound
+// 🎧 Ambient Music
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
 let isPlaying = false;
@@ -32,12 +37,10 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// ⏳ Pomodoro Timer (Clean Dropdown)
-const timeSelect = document.getElementById("timeSelect");
-let totalTime = parseInt(timeSelect.value) * 60;
+// ⏳ 25-Minute Timer
+let totalTime = 25 * 60;
 let remaining = totalTime;
 let timer = null;
-
 const timeDisplay = document.getElementById("time");
 const startBtn = document.getElementById("start");
 const resetBtn = document.getElementById("reset");
@@ -65,13 +68,6 @@ startBtn.addEventListener("click", () => {
 
 resetBtn.addEventListener("click", () => {
   clearInterval(timer);
-  totalTime = parseInt(timeSelect.value) * 60;
-  remaining = totalTime;
-  updateTime();
-});
-
-timeSelect.addEventListener("change", () => {
-  totalTime = parseInt(timeSelect.value) * 60;
   remaining = totalTime;
   updateTime();
 });
@@ -146,7 +142,7 @@ onValue(usersRef, (snapshot) => {
   studyCountDisplay.textContent = count;
 });
 
-// 🌌 Particles
+// 🌌 Background Particles
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
