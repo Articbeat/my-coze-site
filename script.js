@@ -99,9 +99,13 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
-    push(commentsRef, { text, timestamp: serverTimestamp() })
-      .then(() => console.log("✅ Comment sent"))
-      .catch(err => console.error("❌ Firebase error:", err));
+    push(commentsRef, { 
+  text, 
+  timestamp: Date.now() // ✅ Use a normal JS timestamp instead of serverTimestamp
+})
+.then(() => console.log("✅ Comment sent"))
+.catch(err => console.error("❌ Firebase error:", err));
+
     commentInput.value = "";
   }
 });
@@ -111,10 +115,11 @@ onValue(commentsRef, (snapshot) => {
   commentList.innerHTML = "";
   if (data) {
     const sorted = Object.entries(data).sort((a, b) => {
-      const t1 = a[1].timestamp?.seconds ?? 0;
-      const t2 = b[1].timestamp?.seconds ?? 0;
-      return t1 - t2;
-    });
+  const t1 = a[1].timestamp || 0;
+  const t2 = b[1].timestamp || 0;
+  return t1 - t2;
+});
+
     for (let [id, c] of sorted) {
       const div = document.createElement("div");
       div.classList.add("comment");
@@ -208,3 +213,4 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
+
