@@ -55,15 +55,14 @@ main {
   justify-content: center;
 }
 
-/* Minimal, visible dropdown (improved) */
+/* 🔽 Dropdown Styling */
 .minimal-select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-
-  background: rgba(255, 255, 255, 0.03);
-  color: #e8ebff;                /* visible text color */
-  border: 1px solid rgba(167, 186, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: #e8ebff;
+  border: 1px solid rgba(167, 186, 255, 0.3);
   border-radius: 10px;
   padding: 6px 12px;
   font-size: 0.9rem;
@@ -73,19 +72,14 @@ main {
   outline: none;
 }
 
-/* Ensure the dropdown arrow is visible */
-.minimal-select::after { /* visual only for some browsers, fallback handled below */ }
-
-/* Hover / focus */
 .minimal-select:hover,
 .minimal-select:focus {
-  border-color: rgba(167, 186, 255, 0.35);
-  background: rgba(255,255,255,0.06);
+  border-color: rgba(167, 186, 255, 0.5);
+  background: rgba(255,255,255,0.12);
 }
 
-/* Options: many browsers limit styling, but setting color helps where supported */
 .minimal-select option {
-  background: #1b1b2f;      /* same as page background */
+  background: #1b1b2f;
   color: #e8ebff;
 }
 
@@ -152,4 +146,3 @@ main {
   height: 100%;
   z-index: -1;
 }
-
