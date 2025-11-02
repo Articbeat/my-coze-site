@@ -219,5 +219,22 @@ footer {
   pointer-events: none; /* so clicks go through it */
   background: transparent;
 }
+#timeSelect {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  cursor: pointer;
+  outline: none;
+  transition: 0.3s;
+}
+
+#timeSelect:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 
 
