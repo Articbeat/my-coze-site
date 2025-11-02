@@ -23,26 +23,25 @@ body {
 
 /* ====== Canvas + Overlay ====== */
 #particles {
-  position: fixed;
+ position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 0; /* keep it at the very back */
   pointer-events: none;
   background: transparent;
 }
 
 .overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
+ position: fixed;
   top: 0;
   left: 0;
-  background: radial-gradient(circle, rgba(255,255,255,0.1), rgba(0,0,0,0.3));
-  z-index: 0;
-  animation: float 10s infinite alternate ease-in-out;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* slightly above particles */
   pointer-events: none;
+  background: rgba(255, 255, 255, 0); /* transparent, so particles show through */
 
 }
 
@@ -224,4 +223,5 @@ footer {
 .dark .floating-socials a img {
   filter: invert(0.9);
 }
+
 
