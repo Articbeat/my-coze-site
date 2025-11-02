@@ -55,34 +55,6 @@ main {
   justify-content: center;
 }
 
-/* 🔽 Dropdown Styling */
-.minimal-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: rgba(255, 255, 255, 0.07);
-  color: #e8ebff;
-  border: 1px solid rgba(167, 186, 255, 0.3);
-  border-radius: 10px;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: 0.18s;
-  backdrop-filter: blur(6px);
-  outline: none;
-}
-
-.minimal-select:hover,
-.minimal-select:focus {
-  border-color: rgba(167, 186, 255, 0.5);
-  background: rgba(255,255,255,0.12);
-}
-
-.minimal-select option {
-  background: #1b1b2f;
-  color: #e8ebff;
-}
-
 .notes textarea,
 .comments textarea {
   width: 280px;
