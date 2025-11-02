@@ -1,11 +1,7 @@
-// =====================================================
-// ☕ Cozy Study Space — Real-Time Comments + User Count
-// =====================================================
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, set, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Your Firebase Configuration
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
   authDomain: "cozy-study-space.firebaseapp.com",
@@ -17,7 +13,6 @@ const firebaseConfig = {
   measurementId: "G-59EW1K4EN2"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
@@ -90,7 +85,7 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
 
-// 💬 Real-Time Comment Box (Firebase)
+// 💬 Real-Time Comments
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
 const commentList = document.getElementById("commentList");
@@ -99,13 +94,12 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
-    push(commentsRef, { 
-  text, 
-  timestamp: Date.now() // ✅ Use a normal JS timestamp instead of serverTimestamp
-})
-.then(() => console.log("✅ Comment sent"))
-.catch(err => console.error("❌ Firebase error:", err));
-
+    push(commentsRef, {
+      text,
+      timestamp: Date.now()
+    })
+      .then(() => console.log("✅ Comment sent"))
+      .catch(err => console.error("❌ Firebase error:", err));
     commentInput.value = "";
   }
 });
@@ -114,12 +108,7 @@ onValue(commentsRef, (snapshot) => {
   const data = snapshot.val();
   commentList.innerHTML = "";
   if (data) {
-    const sorted = Object.entries(data).sort((a, b) => {
-  const t1 = a[1].timestamp || 0;
-  const t2 = b[1].timestamp || 0;
-  return t1 - t2;
-});
-
+    const sorted = Object.entries(data).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0));
     for (let [id, c] of sorted) {
       const div = document.createElement("div");
       div.classList.add("comment");
@@ -129,19 +118,15 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// 🧍‍♀️ Live User Counter (Fixed)
+// 🧍‍♀️ Live User Counter
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
 
-// Create a new record for this visitor
 const thisUser = push(usersRef);
 set(thisUser, { joined: Date.now() });
-
-// 🔌 Auto-remove this user when disconnected or tab closed
 onDisconnect(thisUser).remove();
 window.addEventListener("beforeunload", () => remove(thisUser));
 
-// 👥 Count active users (only recent ones)
 onValue(usersRef, (snapshot) => {
   const data = snapshot.val();
   const now = Date.now();
@@ -149,11 +134,7 @@ onValue(usersRef, (snapshot) => {
 
   if (data) {
     for (const id in data) {
-      const joinedTime = data[id].joined
-        ? data[id].joined.seconds
-          ? data[id].joined.seconds * 1000
-          : data[id].joined
-        : 0;
+      const joinedTime = data[id].joined || 0;
       if (now - joinedTime < 10 * 60 * 1000) {
         count++;
       } else {
@@ -165,18 +146,17 @@ onValue(usersRef, (snapshot) => {
   studyCountDisplay.textContent = count;
 });
 
-// 🌌 Midnight Chill Particles
+// 🌌 Particles
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
-
-resizeCanvas();
-addEventListener("resize", resizeCanvas);
 
 function resizeCanvas() {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
 }
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 for (let i = 0; i < 80; i++) {
   particles.push({
@@ -200,7 +180,6 @@ function draw() {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(180, 210, 255, ${p.opacity})`;
-
     ctx.shadowColor = "rgba(140, 190, 255, 0.8)";
     ctx.shadowBlur = 4;
     ctx.fill();
@@ -214,7 +193,3 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
-
-
-
-
