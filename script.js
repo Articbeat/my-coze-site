@@ -5,7 +5,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Firebase Configuration
+// ✅ Your Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
   authDomain: "cozy-study-space.firebaseapp.com",
@@ -55,7 +55,7 @@ timeButtons.forEach(btn => {
     remaining = totalTime;
     updateTime();
 
-    // highlight active bubble
+    // Highlight active bubble
     timeButtons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   });
@@ -73,6 +73,8 @@ startBtn.addEventListener("click", () => {
     if (remaining <= 0) {
       clearInterval(timer);
       alert("Time’s up! Take a break ☕");
+      remaining = totalTime;
+      updateTime();
       return;
     }
     remaining--;
@@ -113,6 +115,7 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
+    console.log("Posting comment:", text);
     push(commentsRef, { text, timestamp: serverTimestamp() })
       .then(() => console.log("✅ Comment sent"))
       .catch(err => console.error("❌ Firebase error:", err));
@@ -134,19 +137,19 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// 🧍‍♀️ Live User Counter
+// 🧍‍♀️ Live User Counter (Fixed)
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
 
-// Create a record for this visitor
+// Create a new record for this visitor
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
-// Auto-remove this user when tab closed or disconnected
+// 🔌 Auto-remove this user when disconnected or tab closed
 onDisconnect(thisUser).remove();
 window.addEventListener("beforeunload", () => remove(thisUser));
 
-// Count active users (last 10 minutes)
+// 👥 Count active users (only recent ones)
 onValue(usersRef, (snapshot) => {
   const data = snapshot.val();
   const now = Date.now();
@@ -155,9 +158,11 @@ onValue(usersRef, (snapshot) => {
   if (data) {
     for (const id in data) {
       const joinedTime = data[id].joined?.seconds * 1000 || data[id].joined;
+      // Only count users active within the last 10 minutes
       if (now - joinedTime < 10 * 60 * 1000) {
         count++;
       } else {
+        // Clean up old inactive entries
         remove(ref(db, "activeUsers/" + id));
       }
     }
