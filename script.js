@@ -1,11 +1,7 @@
-// =====================================================
-// ☕ The Artic Den — Real-Time Comments + User Count + Bubble Timer
-// =====================================================
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Your Firebase Configuration
+// ✅ Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
   authDomain: "cozy-study-space.firebaseapp.com",
@@ -17,11 +13,10 @@ const firebaseConfig = {
   measurementId: "G-59EW1K4EN2"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🎧 Ambient Sound Toggle
+// 🎵 Ambient Sound
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
 let isPlaying = false;
@@ -37,29 +32,15 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// ⏳ Pomodoro Timer (Bubble Buttons)
-let totalTime = 25 * 60; // default 25 minutes
+// ⏳ Pomodoro Timer (Clean Dropdown)
+const timeSelect = document.getElementById("timeSelect");
+let totalTime = parseInt(timeSelect.value) * 60;
 let remaining = totalTime;
 let timer = null;
 
 const timeDisplay = document.getElementById("time");
 const startBtn = document.getElementById("start");
 const resetBtn = document.getElementById("reset");
-
-// 🕒 Time selection bubbles
-const timeButtons = document.querySelectorAll(".time-btn");
-
-timeButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    totalTime = parseInt(btn.getAttribute("data-min")) * 60;
-    remaining = totalTime;
-    updateTime();
-
-    // Highlight active bubble
-    timeButtons.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-  });
-});
 
 function updateTime() {
   const mins = Math.floor(remaining / 60);
@@ -84,6 +65,13 @@ startBtn.addEventListener("click", () => {
 
 resetBtn.addEventListener("click", () => {
   clearInterval(timer);
+  totalTime = parseInt(timeSelect.value) * 60;
+  remaining = totalTime;
+  updateTime();
+});
+
+timeSelect.addEventListener("change", () => {
+  totalTime = parseInt(timeSelect.value) * 60;
   remaining = totalTime;
   updateTime();
 });
@@ -93,7 +81,6 @@ updateTime();
 // 📝 Notes Auto-Save
 const noteArea = document.getElementById("noteArea");
 noteArea.value = localStorage.getItem("cozyNotes") || "";
-
 noteArea.addEventListener("input", () => {
   localStorage.setItem("cozyNotes", noteArea.value);
 });
@@ -106,7 +93,7 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
 
-// 💬 Real-Time Comment Box (Firebase)
+// 💬 Comments (Firebase)
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
 const commentList = document.getElementById("commentList");
@@ -115,10 +102,7 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
-    console.log("Posting comment:", text);
-    push(commentsRef, { text, timestamp: serverTimestamp() })
-      .then(() => console.log("✅ Comment sent"))
-      .catch(err => console.error("❌ Firebase error:", err));
+    push(commentsRef, { text, timestamp: serverTimestamp() });
     commentInput.value = "";
   }
 });
@@ -137,19 +121,15 @@ onValue(commentsRef, (snapshot) => {
   }
 });
 
-// 🧍‍♀️ Live User Counter (Fixed)
+// 👥 Live User Counter
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
-
-// Create a new record for this visitor
 const thisUser = push(usersRef);
 set(thisUser, { joined: serverTimestamp() });
 
-// 🔌 Auto-remove this user when disconnected or tab closed
 onDisconnect(thisUser).remove();
 window.addEventListener("beforeunload", () => remove(thisUser));
 
-// 👥 Count active users (only recent ones)
 onValue(usersRef, (snapshot) => {
   const data = snapshot.val();
   const now = Date.now();
@@ -158,20 +138,15 @@ onValue(usersRef, (snapshot) => {
   if (data) {
     for (const id in data) {
       const joinedTime = data[id].joined?.seconds * 1000 || data[id].joined;
-      // Only count users active within the last 10 minutes
-      if (now - joinedTime < 10 * 60 * 1000) {
-        count++;
-      } else {
-        // Clean up old inactive entries
-        remove(ref(db, "activeUsers/" + id));
-      }
+      if (now - joinedTime < 10 * 60 * 1000) count++;
+      else remove(ref(db, "activeUsers/" + id));
     }
   }
 
   studyCountDisplay.textContent = count;
 });
 
-// 🌌 Midnight Chill Particles
+// 🌌 Particles
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
