@@ -1,7 +1,11 @@
+// =====================================================
+// ☕ The Artic Den — Real-Time Comments + User Count + Clean Dropdown Timer
+// =====================================================
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, remove, serverTimestamp, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-// ✅ Firebase Config
+// ✅ Your Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCTSXqcVmFKkvo0gXVY2xez9Yx7su3iFMw",
   authDomain: "cozy-study-space.firebaseapp.com",
@@ -13,10 +17,11 @@ const firebaseConfig = {
   measurementId: "G-59EW1K4EN2"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🎵 Ambient Sound
+// 🎧 Ambient Sound Toggle
 const soundToggle = document.getElementById("soundToggle");
 const ambient = document.getElementById("ambient");
 let isPlaying = false;
@@ -32,9 +37,11 @@ soundToggle.addEventListener("click", () => {
   isPlaying = !isPlaying;
 });
 
-// ⏳ Pomodoro Timer (Clean Dropdown)
+// ⏳ Pomodoro Timer (Clean Dropdown — fixed version)
 const timeSelect = document.getElementById("timeSelect");
-let totalTime = parseInt(timeSelect.value) * 60;
+if (!timeSelect) console.warn("timeSelect not found — defaulting to 25 min");
+
+let totalTime = parseInt((timeSelect && timeSelect.value) || "25", 10) * 60;
 let remaining = totalTime;
 let timer = null;
 
@@ -48,7 +55,10 @@ function updateTime() {
   timeDisplay.textContent = `${mins}:${secs < 10 ? "0" : ""}${secs}`;
 }
 
+// ▶ Start
 startBtn.addEventListener("click", () => {
+  if (timeSelect) totalTime = parseInt(timeSelect.value || "25", 10) * 60;
+  remaining = remaining || totalTime;
   clearInterval(timer);
   timer = setInterval(() => {
     if (remaining <= 0) {
@@ -63,24 +73,29 @@ startBtn.addEventListener("click", () => {
   }, 1000);
 });
 
+// 🔁 Reset
 resetBtn.addEventListener("click", () => {
   clearInterval(timer);
-  totalTime = parseInt(timeSelect.value) * 60;
+  if (timeSelect) totalTime = parseInt(timeSelect.value || "25", 10) * 60;
   remaining = totalTime;
   updateTime();
 });
 
-timeSelect.addEventListener("change", () => {
-  totalTime = parseInt(timeSelect.value) * 60;
-  remaining = totalTime;
-  updateTime();
-});
+// 🕒 Update when user selects new time
+if (timeSelect) {
+  timeSelect.addEventListener("change", () => {
+    totalTime = parseInt(timeSelect.value || "25", 10) * 60;
+    remaining = totalTime;
+    updateTime();
+  });
+}
 
 updateTime();
 
 // 📝 Notes Auto-Save
 const noteArea = document.getElementById("noteArea");
 noteArea.value = localStorage.getItem("cozyNotes") || "";
+
 noteArea.addEventListener("input", () => {
   localStorage.setItem("cozyNotes", noteArea.value);
 });
@@ -93,7 +108,7 @@ themeToggle.addEventListener("click", () => {
   themeToggle.textContent = darkMode ? "☀️ Switch Theme" : "🌙 Switch Theme";
 });
 
-// 💬 Comments (Firebase)
+// 💬 Real-Time Comment Box (Firebase)
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
 const commentList = document.getElementById("commentList");
@@ -146,7 +161,7 @@ onValue(usersRef, (snapshot) => {
   studyCountDisplay.textContent = count;
 });
 
-// 🌌 Particles
+// 🌌 Midnight Chill Particles
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particles = [];
