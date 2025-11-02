@@ -1,5 +1,5 @@
 // =====================================================
-// ☕ Cozy Study Space — Real-Time Comments + User Count + Particles
+// ❄️ The Arctic Den — Real-Time Comments + Users + Particles
 // =====================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
@@ -97,7 +97,7 @@ themeToggle.addEventListener("click", () => {
 });
 
 // =====================================================
-// 💬 Real-Time Comments
+// 💬 Real-Time Comments (fixed timestamp issue)
 // =====================================================
 const commentInput = document.getElementById("commentInput");
 const addComment = document.getElementById("addComment");
@@ -107,7 +107,7 @@ const commentsRef = ref(db, "comments");
 addComment.addEventListener("click", () => {
   const text = commentInput.value.trim();
   if (text) {
-    push(commentsRef, { text, timestamp: serverTimestamp() });
+    push(commentsRef, { text, timestamp: Date.now() }); // using local timestamp instead
     commentInput.value = "";
   }
 });
@@ -116,7 +116,7 @@ onValue(commentsRef, (snapshot) => {
   const data = snapshot.val();
   commentList.innerHTML = "";
   if (data) {
-    const sorted = Object.entries(data).sort((a, b) => a[1].timestamp - b[1].timestamp);
+    const sorted = Object.entries(data).sort((a, b) => (a[1].timestamp || 0) - (b[1].timestamp || 0));
     for (let [id, c] of sorted) {
       const div = document.createElement("div");
       div.classList.add("comment");
@@ -132,8 +132,7 @@ onValue(commentsRef, (snapshot) => {
 const usersRef = ref(db, "activeUsers");
 const studyCountDisplay = document.getElementById("studyCount");
 const thisUser = push(usersRef);
-set(thisUser, { joined: serverTimestamp() });
-
+set(thisUser, { joined: Date.now() });
 window.addEventListener("beforeunload", () => remove(thisUser));
 
 onValue(usersRef, (snapshot) => {
